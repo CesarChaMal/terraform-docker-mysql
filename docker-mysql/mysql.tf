@@ -18,7 +18,7 @@ resource "docker_container" "mysql" {
   }
   ports {
     internal = 3306
-    external = 3306
+    external = 33060
   }
 }
 
