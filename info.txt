@@ -1,0 +1,71 @@
+#bcdedit /set hypervisorlaunchtype off
+#bcdedit /set hypervisorlaunchtype on
+#bcdedit /set hypervisorlaunchtype auto
+
+#Vagrant up - VBoxManage.exe error: VT-x is not available
+
+Stop hyper-v service running by default in Windows 8/10, since it blocks all other calls to VT hardware.
+
+Additional explanation here: https://social.technet.microsoft.com/Forums/windows/en-US/118561b9-7155-46e3-a874-6a38b35c67fd/hyperv-disables-vtx-for-other-hypervisors?forum=w8itprogeneral
+
+Also as you have mentioned, if not already enabled, turn on Intel VT virtualization in BIOS settings and restart the machine.
+
+To turn Hypervisor off, run this from Command Prompt (Admin) (Windows+X):
+
+bcdedit /set hypervisorlaunchtype off
+and reboot your computer. To turn it back on again, run:
+
+bcdedit /set hypervisorlaunchtype on
+If you receive "The integer data is not valid as specified", try:
+
+bcdedit /set hypervisorlaunchtype auto
+
+#In Windows Features elimite windows Sandbox so you can use both vagrant and docker toguether
+
+vagrant up
+vagrant ssh-config
+-------------------------------
+Host devops-box
+  HostName 127.0.0.1
+  User vagrant
+  Port 2222
+  UserKnownHostsFile /dev/null
+  StrictHostKeyChecking no
+  PasswordAuthentication no
+  IdentityFile E:/IdeaProjects/devops-box/.vagrant/machines/devops-box/virtualbox/private_key
+  IdentitiesOnly yes
+  LogLevel FATAL
+-------------------------------
+
+vagrant ssh devops-box
+
+ansible --version
+docker -v
+aws --version
+packer -v
+terraform version
+
+#rm -rf .vagrant/
+
+vagrant upload scripts/packer.sh
+vagrant upload scripts/terraform.sh
+vagrant upload scripts/terraform_version.sh
+vagrant upload terraform-test/main.tf
+vagrant upload terraform-test/resource.tf
+vagrant upload terraform-test/terraform.tfvars
+
+vagrant global-status
+vagrant plugin install vagrant-scp
+vagrant destroy 1a2b3c4d
+vagrant box list
+vagrant status devops-box
+vagrant halt devops-box
+vagrant suspend devops-box
+vagrant up devops-box
+
+vagrant scp devops-box:/home/vagrant/terraform_version.sh "E:\IdeaProjects\devops-box\scripts"
+
+terraform plan
+terraform apply
+terraform show
+terraform destroy
